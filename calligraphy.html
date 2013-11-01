@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  </head>
+  <body>
+  <form action="#">
+    Horizontal spacing:<input type="text" id="hspacing" name="hspacing" value="30"><br>
+    <div id="hspacing-slider"></div><br>
+    Diagonal spacing:<input type="text" id="dspacing" name="dspacing" value="20"><br>
+    <div id="dspacing-slider"></div><br>
+    Angle:<input type="text" id="angle" name="angle" value="55"><br>
+    <div id="angle-slider"></div><br>
+  </form>
+      <canvas id="myCanvas" width="800" height="400"></canvas>
+      <script>
+        function drawcanvas(){
+          var canvas = document.getElementById('myCanvas');
+          var context = canvas.getContext('2d');
+          var hspacing = parseInt($("#hspacing").val());
+          var drawheight = 0;
+          for(var line = 0;line < 100; line++)
+          {
+            drawheight = line*hspacing;
+            context.beginPath();
+            context.moveTo(0, 0+drawheight);
+            context.lineTo(2000, 0+drawheight);
+            context.stroke();
+          };
+          var dspacing = parseInt($("#dspacing").val());
+          var angle = parseInt($("#angle").val());
+          var radians = angle * (Math.PI / 180);
+          var ratio = Math.tan(radians);
+          var hspacing = dspacing / ratio;
+          for(var line = 0;line < 100; line++)
+          {
+            drawheight = line * dspacing;
+            drawwidth = line * hspacing;
+            context.beginPath();
+            context.moveTo(1200, -1714+drawheight);
+            context.lineTo(-1200, 1714+drawheight);
+            context.stroke();
+          };
+        };
+
+        function blankcanvas() {
+          var canvas = document.getElementById('myCanvas');
+          var context = canvas.getContext('2d');
+          context.fillStyle="#FFFFEE";
+          context.fillRect(0,0,4000,4000);
+        };
+
+        $(function() {
+          $( "#hspacing-slider" ).slider({
+            min: 1,
+            max: 200,
+            value: 30,
+            slide: function( event,ui ) {
+              $( "#hspacing").val(ui.value);
+              blankcanvas();
+              drawcanvas();
+            }
+          });
+        });
+        $(function() {
+          $( "#dspacing-slider" ).slider({
+            min: 1,
+            max: 200,
+            value: 20,
+            slide: function( event,ui ) {
+              $( "#dspacing").val(ui.value);
+              blankcanvas();
+              drawcanvas();
+            }
+          });
+        });
+        $(function() {
+          $( "#angle-slider" ).slider({
+            min: 1,
+            max: 200,
+            value: 30,
+            slide: function( event,ui ) {
+              $( "#angle").val(ui.value);
+              blankcanvas();
+              drawcanvas();
+            }
+          });
+        });
+        $( "#hspacing" ).change(function() {
+          blankcanvas();
+          drawcanvas();
+        });
+        blankcanvas();
+        drawcanvas();
+      </script>
+  </body>
+</html>
