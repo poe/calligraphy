@@ -9,40 +9,67 @@
   <form action="#">
     <input type='button' id='hideshow' value='hide/show'>
     <div id=controls>
-      Horizontal spacing:<input type="text" id="hspacing" name="hspacing" value="30"><br>
-      <div id="hspacing-slider"></div><br>
       Diagonal spacing:<input type="text" id="dspacing" name="dspacing" value="20"><br>
       <div id="dspacing-slider"></div><br>
       Angle:<input type="text" id="angle" name="angle" value="55"><br>
       <div id="angle-slider"></div><br>
-      Height:<input type="text" id="height" name="height" value="400"><br>
+      Height:<input type="text" id="height" name="height" value="1100"><br>
       <div id="height-slider"></div><br>
-      Width:<input type="text" id="width" name="width" value="800"><br>
+      Width:<input type="text" id="width" name="width" value="850"><br>
       <div id="width-slider"></div><br>
-      Lines:<input type="text" id="lines" name="lines" value="4"><br>
+      Lines:<input type="text" id="lines" name="lines" value="10"><br>
       <div id="lines-slider"></div><br>
     </div>
 
   </form>
       <canvas id="writingBlock" width="800" height="400"></canvas>
       <script>
-        function drawcanvas(){
+        function drawHLines(){
           var canvas = document.getElementById('writingBlock');
           var context = canvas.getContext('2d');
-          var hspacing = parseInt($("#hspacing").val());
           var drawheight = 0;
           var width = parseInt($("#width").val());
           var height = parseInt($("#height").val());
+          var rules = parseInt($("#lines").val()) * 5 + 1;
           var lines = parseInt($("#lines").val());
+          var hspacing = ((height / 5)+1)/lines;
 
-          for(var line = 0;line < lines; line++)
+          for(var line = 0;line < rules; line++)
           {
             drawheight = line*hspacing;
             context.beginPath();
+            if (!context.setLineDash) {
+              context.setLineDash = function () {}
+            }
+            if((line-1)%5==0 || (line-4)%5==0)
+            {
+              context.strokeStyle = "#0000FF";
+              context.setLineDash([5]);
+              context.lineWidth = 1;
+            }
+            else if((line)%5==0){
+              context.strokeStyle = "#000000";
+              context.setLineDash([5,0]);
+              context.lineWidth = 2;
+            }
+            else
+            {
+              context.strokeStyle = "#000000";
+              context.setLineDash([5,0]);
+              context.lineWidth = 1;
+            }
             context.moveTo(0, 0+drawheight);
             context.lineTo(2000, 0+drawheight);
             context.stroke();
           };
+        }
+        function drawDLines(){
+          var canvas = document.getElementById('writingBlock');
+          var context = canvas.getContext('2d');
+          var drawheight = 0;
+          var width = parseInt($("#width").val());
+          var height = parseInt($("#height").val());
+          var lines = parseInt($("#lines").val()) * 5 + 1;
           var dspacing = parseInt($("#dspacing").val());
           var angle = parseInt($("#angle").val());
           var radians = angle * (Math.PI / 180);
@@ -53,10 +80,17 @@
             drawheight = line * dspacing;
             drawwidth = line * hspacing;
             context.beginPath();
+            context.strokeStyle = "#000000";
+            context.setLineDash([5,0]);
+            context.lineWidth = 1;
             context.moveTo(1200, -1714+drawheight);
             context.lineTo(-1200, 1714+drawheight);
             context.stroke();
           };
+        }
+        function drawcanvas(){
+          drawHLines();
+          drawDLines();
         };
 
         function blankcanvas() {
@@ -134,7 +168,7 @@
           $( "#lines-slider" ).slider({
             min: 1,
             max: 100,
-            value: 10,
+            value: 5,
             slide: function( event,ui ) {
               $( "#lines").val(ui.value);
               blankcanvas();
