@@ -7,21 +7,35 @@
   </head>
   <body>
   <form action="#">
-    Horizontal spacing:<input type="text" id="hspacing" name="hspacing" value="30"><br>
-    <div id="hspacing-slider"></div><br>
-    Diagonal spacing:<input type="text" id="dspacing" name="dspacing" value="20"><br>
-    <div id="dspacing-slider"></div><br>
-    Angle:<input type="text" id="angle" name="angle" value="55"><br>
-    <div id="angle-slider"></div><br>
+    <input type='button' id='hideshow' value='hide/show'>
+    <div id=controls>
+      Horizontal spacing:<input type="text" id="hspacing" name="hspacing" value="30"><br>
+      <div id="hspacing-slider"></div><br>
+      Diagonal spacing:<input type="text" id="dspacing" name="dspacing" value="20"><br>
+      <div id="dspacing-slider"></div><br>
+      Angle:<input type="text" id="angle" name="angle" value="55"><br>
+      <div id="angle-slider"></div><br>
+      Height:<input type="text" id="height" name="height" value="400"><br>
+      <div id="height-slider"></div><br>
+      Width:<input type="text" id="width" name="width" value="800"><br>
+      <div id="width-slider"></div><br>
+      Lines:<input type="text" id="lines" name="lines" value="4"><br>
+      <div id="lines-slider"></div><br>
+    </div>
+
   </form>
-      <canvas id="myCanvas" width="800" height="400"></canvas>
+      <canvas id="writingBlock" width="800" height="400"></canvas>
       <script>
         function drawcanvas(){
-          var canvas = document.getElementById('myCanvas');
+          var canvas = document.getElementById('writingBlock');
           var context = canvas.getContext('2d');
           var hspacing = parseInt($("#hspacing").val());
           var drawheight = 0;
-          for(var line = 0;line < 100; line++)
+          var width = parseInt($("#width").val());
+          var height = parseInt($("#height").val());
+          var lines = parseInt($("#lines").val());
+
+          for(var line = 0;line < lines; line++)
           {
             drawheight = line*hspacing;
             context.beginPath();
@@ -34,7 +48,7 @@
           var radians = angle * (Math.PI / 180);
           var ratio = Math.tan(radians);
           var hspacing = dspacing / ratio;
-          for(var line = 0;line < 100; line++)
+          for(var line = 0;line < lines*1000; line++)
           {
             drawheight = line * dspacing;
             drawwidth = line * hspacing;
@@ -46,10 +60,14 @@
         };
 
         function blankcanvas() {
-          var canvas = document.getElementById('myCanvas');
+          var canvas = document.getElementById('writingBlock');
+          var width = parseInt($("#width").val());
+          canvas.width = width;
+          var height = parseInt($("#height").val());
+          canvas.height = height;
           var context = canvas.getContext('2d');
-          context.fillStyle="#FFFFEE";
-          context.fillRect(0,0,4000,4000);
+          context.fillStyle="#FFFFFF";
+          context.fillRect(0,0,width,height);
         };
 
         $(function() {
@@ -88,10 +106,51 @@
             }
           });
         });
+        $(function() {
+          $( "#height-slider" ).slider({
+            min: 1,
+            max: 2000,
+            value: 400,
+            slide: function( event,ui ) {
+              $( "#height").val(ui.value);
+              blankcanvas();
+              drawcanvas();
+            }
+          });
+        });
+        $(function() {
+          $( "#width-slider" ).slider({
+            min: 1,
+            max: 4000,
+            value: 800,
+            slide: function( event,ui ) {
+              $( "#width").val(ui.value);
+              blankcanvas();
+              drawcanvas();
+            }
+          });
+        });
+        $(function() {
+          $( "#lines-slider" ).slider({
+            min: 1,
+            max: 100,
+            value: 10,
+            slide: function( event,ui ) {
+              $( "#lines").val(ui.value);
+              blankcanvas();
+              drawcanvas();
+            }
+          });
+        });
         $( "#hspacing" ).change(function() {
           blankcanvas();
           drawcanvas();
         });
+
+        $("#hideshow").click(function() { 
+            $("#controls").toggle();
+        });
+
         blankcanvas();
         drawcanvas();
       </script>
