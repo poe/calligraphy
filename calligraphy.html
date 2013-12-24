@@ -88,9 +88,36 @@
             context.stroke();
           };
         }
+        function drawDiagionals(){
+          var canvas = document.getElementById('writingBlock');
+          var context = canvas.getContext('2d');
+          var drawheight = 0;
+          var width = parseInt($("#width").val());
+          var height = parseInt($("#height").val());
+          var lines = parseInt($("#lines").val()) * 5 + 1;
+          var dspacing = parseInt($("#dspacing").val());
+          var angle = parseInt($("#angle").val());
+          var radians = angle * (Math.PI / 180);
+          var ratio = 1/Math.tan(radians);
+          var hspacing = dspacing / ratio;
+          line = 0;
+          drawheight = line * dspacing;
+          drawwidth = line * hspacing;
+          context.beginPath();
+          context.strokeStyle = "#00FF00";
+          context.setLineDash([5,0]);
+          context.lineWidth = 1;
+          for(var line = 0;line < 3000; line+=25)
+            {
+              context.moveTo((width* -2) + line, height);
+              context.lineTo((height * ratio) + (width* -2)+ line, 0);
+            }
+              context.stroke();
+        }
         function drawcanvas(){
           drawHLines();
-          drawDLines();
+//          drawDLines();
+          drawDiagionals();
         };
 
         function blankcanvas() {
@@ -132,7 +159,7 @@
           $( "#angle-slider" ).slider({
             min: 1,
             max: 200,
-            value: 30,
+            value: 55,
             slide: function( event,ui ) {
               $( "#angle").val(ui.value);
               blankcanvas();
@@ -144,7 +171,7 @@
           $( "#height-slider" ).slider({
             min: 1,
             max: 2000,
-            value: 400,
+            value: 1100,
             slide: function( event,ui ) {
               $( "#height").val(ui.value);
               blankcanvas();
@@ -156,7 +183,7 @@
           $( "#width-slider" ).slider({
             min: 1,
             max: 4000,
-            value: 800,
+            value: 850,
             slide: function( event,ui ) {
               $( "#width").val(ui.value);
               blankcanvas();
