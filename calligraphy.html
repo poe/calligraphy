@@ -9,6 +9,7 @@
   <form action="#">
     <input type='button' id='hideshow' value='hide/show'>
     <div id=controls>
+      Dotted lines:<input type="checkbox" id="dotted" name="dotted" checked="yes"> Light Blue:<input type="checkbox" id="ltblue" name="ltblue" checked="yes"><br>
       Angle:<input type="text" id="angle" name="angle" value="55"><br>
       <div id="angle-slider"></div><br>
       Height:<input type="text" id="height" name="height" value="1100"><br>
@@ -31,6 +32,8 @@
           var rules = parseInt($("#lines").val()) * 5 + 1;
           var lines = parseInt($("#lines").val());
           var hspacing = ((height / 5)+1)/lines;
+          var dotted = $("#dotted").prop('checked');
+          var ltblue = $("#ltblue").prop('checked');
 
           for(var line = 0;line < rules; line++)
           {
@@ -41,19 +44,40 @@
             }
             if((line-1)%5==0 || (line-4)%5==0)
             {
-              context.strokeStyle = "#0000FF";
-              context.setLineDash([5]);
+              if(ltblue){
+                context.strokeStyle = "#0000CC";
+              }
+              else {
+                context.strokeStyle = "#0000FF";
+              }
+              if(dotted){
+                context.setLineDash([5]);
+              }
               context.lineWidth = 1;
             }
             else if((line)%5==0){
-              context.strokeStyle = "#000000";
-              context.setLineDash([5,0]);
+              if(ltblue){
+                context.strokeStyle = "#0000CC";
+              }
+              else {
+                context.strokeStyle = "#000000";
+              }
+              if(dotted){
+                context.setLineDash([5,0]);
+              }
               context.lineWidth = 2;
             }
             else
             {
-              context.strokeStyle = "#000000";
-              context.setLineDash([5,0]);
+              if(ltblue){
+                context.strokeStyle = "#0000CC";
+              }
+              else {
+                context.strokeStyle = "#000000";
+              }
+              if(dotted){
+                context.setLineDash([5,0]);
+              }
               context.lineWidth = 1;
             }
             context.moveTo(0, 0+drawheight);
@@ -72,20 +96,27 @@
           var angle = parseInt($("#angle").val());
           var radians = angle * (Math.PI / 180);
           var ratio = 1/Math.tan(radians);
-          var hspacing = dspacing / ratio;
+          var hspacing = ((height / 5)+1)/lines;
           line = 0;
+          var wspacing = height/lines;
           drawheight = line * dspacing;
           drawwidth = line * hspacing;
           context.beginPath();
-          context.strokeStyle = "#007766";
+          if(ltblue){
+            context.strokeStyle = "#0000CC";
+          }
+          else {
+            context.strokeStyle = "#000000";
+          }
           context.setLineDash([5,0]);
           context.lineWidth = 1;
-          for(var line = width * -3;line < width * 3; line+=25)
+          for(var line = 0;line < 300; line++)
             {
-              context.moveTo((width* -2) + line, height);
-              context.lineTo((height * ratio) + (width* -2)+ line, 0);
+              drawwidth = line * wspacing;
+              context.moveTo((width* -2) + drawwidth, height);
+              context.lineTo((height * ratio) + (width * -2) + drawwidth, 0);
             }
-              context.stroke();
+            context.stroke();
         }
         function drawcanvas(){
           drawHLines();
@@ -103,19 +134,6 @@
           context.fillRect(0,0,width,height);
         };
 
-
-        $(function() {
-          $( "#dspacing-slider" ).slider({
-            min: 1,
-            max: 200,
-            value: 20,
-            slide: function( event,ui ) {
-              $( "#dspacing").val(ui.value);
-              blankcanvas();
-              drawcanvas();
-            }
-          });
-        });
         $(function() {
           $( "#angle-slider" ).slider({
             min: 1,
@@ -164,12 +182,18 @@
             }
           });
         });
-        $( "#hspacing" ).change(function() {
+
+        $("#dotted").change(function() {
           blankcanvas();
           drawcanvas();
         });
 
-        $("#hideshow").click(function() { 
+        $("#ltblue").change(function() {
+          blankcanvas();
+          drawcanvas();
+        });
+
+        $("#hideshow").click(function() {
             $("#controls").toggle();
         });
 
