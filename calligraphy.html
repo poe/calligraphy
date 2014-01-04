@@ -9,7 +9,7 @@
   <form action="#">
     <input type='button' id='hideshow' value='hide/show'>
     <div id=controls>
-      Dotted lines:<input type="checkbox" id="dotted" name="dotted" checked="yes"> Light Blue:<input type="checkbox" id="ltblue" name="ltblue" checked="yes"><br>
+      Dotted lines:<input type="checkbox" id="dotted" name="dotted" checked="yes"> Light Blue:<input type="checkbox" id="ltblue" name="ltblue"><br>
       Angle:<input type="text" id="angle" name="angle" value="55"><br>
       <div id="angle-slider"></div><br>
       Height:<input type="text" id="height" name="height" value="1100"><br>
@@ -48,7 +48,7 @@
                 context.strokeStyle = "#0000CC";
               }
               else {
-                context.strokeStyle = "#0000FF";
+                context.strokeStyle = "#000000";
               }
               if(dotted){
                 context.setLineDash([5]);
@@ -97,6 +97,7 @@
           var radians = angle * (Math.PI / 180);
           var ratio = 1/Math.tan(radians);
           var hspacing = ((height / 5)+1)/lines;
+          var ltblue = $("#ltblue").prop('checked');
           line = 0;
           var wspacing = height/lines;
           drawheight = line * dspacing;
